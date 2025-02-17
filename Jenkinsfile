@@ -5,15 +5,20 @@ pipeline {
         PATH = "$DOTNET_ROOT:$PATH"
     }
     stages {
+        stage('Restore Dependencies') {
+            steps {
+                sh 'dotnet restore'
+            }
+        }
         stage('Build Project') {
             steps {
                 sh 'echo $PATH' 
-                sh 'dotnet build'
+                sh 'dotnet build --configuration Release'
             }
         }
         stage('Run dotnet tests') {
             steps {
-                sh 'dotnet test'
+                sh 'dotnet test --logger "trx;LogFileName=test-results.trx"'
             }
         }
     }
